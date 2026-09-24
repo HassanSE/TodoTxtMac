@@ -67,7 +67,7 @@
     // Without this method override, opening a todo file using the command line argument
     // or the default todo file user preference also opens an Untitled document every time.
     return ([self.appController commandLineArgumentTodoFile] == NULL &&
-            ![[NSUserDefaults standardUserDefaults] boolForKey:@"openDefaultTodoFileOnStartup"]);
+            ![self.appController shouldOpenDefaultTodoFileOnStartup]);
 }
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication {

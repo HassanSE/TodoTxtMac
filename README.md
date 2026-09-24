@@ -27,7 +27,6 @@ From a design perspective the goal is to be the fastest, simplest, and cleanest 
 - Shortcuts to toggle completion, change priority, set due dates, and delete all selected tasks.
 - Archive completed tasks (to done.txt), either on command or automatically.
 - Preserves Windows or Unix line endings in the todo.txt file for cross-platform compatability.
-- Automatic update checking.
 - Displays general metadata (task counts, etc.) about the task list.
 - Undo/redo support.
 

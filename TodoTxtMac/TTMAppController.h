@@ -109,6 +109,13 @@ extern NSString *const TodoFileArgument;
 #pragma mark - Open Default Todo.txt File Methods
 
 /*!
+ * @method shouldOpenDefaultTodoFileOnStartup
+ * @abstract This method returns YES if the user preference for opening a default todo.txt
+ * file on startup is enabled and a default todo.txt file has been chosen.
+ */
+- (BOOL)shouldOpenDefaultTodoFileOnStartup;
+
+/*!
  * @method openDefaultTodoFile:
  * @abstract This method opens the default todo.txt file (TTMDocument) based on user preferences.
  * If the user preference for opening a default todo.txt file on startup is disabled,

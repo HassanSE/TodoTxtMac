@@ -83,10 +83,13 @@
 }
 
 - (IBAction)chooseDefaultTodoFile:(id)sender {
-    [self chooseFileForUserDefaultsKey:@"defaultTodoFilePath" withPrompt:@"Choose todo.txt File"];
+    if ([self chooseFileForUserDefaultsKey:@"defaultTodoFilePath" withPrompt:@"Choose todo.txt File"]) {
+        // Choosing a default file implies the user wants it opened on startup.
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"openDefaultTodoFileOnStartup"];
+    }
 }
 
-- (void)chooseFileForUserDefaultsKey:(NSString*)userDefaultsKey withPrompt:(NSString*)prompt {
+- (BOOL)chooseFileForUserDefaultsKey:(NSString*)userDefaultsKey withPrompt:(NSString*)prompt {
     NSOpenPanel *panel = [NSOpenPanel openPanel];
     [panel setCanChooseFiles:YES];
     [panel setCanChooseDirectories:NO];
@@ -94,11 +97,13 @@
     [panel setPrompt:prompt];
     [panel setAllowedFileTypes:@[@"txt", @"TXT", @"todo", @"TODO", @""]];
     
-    if ([panel runModal] == NSFileHandlingPanelOKButton) {
-        for (NSURL *fileURL in [panel URLs]) {
-            [[NSUserDefaults standardUserDefaults] setValue:[fileURL path] forKey:userDefaultsKey];
-        }
+    if ([panel runModal] != NSFileHandlingPanelOKButton) {
+        return NO;
     }
+    for (NSURL *fileURL in [panel URLs]) {
+        [[NSUserDefaults standardUserDefaults] setValue:[fileURL path] forKey:userDefaultsKey];
+    }
+    return YES;
 }
 
 #pragma mark - Behavior Change Methods
