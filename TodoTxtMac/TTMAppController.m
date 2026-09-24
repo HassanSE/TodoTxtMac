@@ -210,14 +210,25 @@ NSString *const TodoFileArgument = @"todo-file";
      openDocumentWithContentsOfURL:fileURL
      display:YES
      completionHandler:^(NSDocument *document, BOOL alreadyOpen, NSError *error){
-         // NSLog(@"%@",document);
+         // Tell the user why the file did not open (e.g. it was moved or deleted),
+         // rather than silently showing no window at all.
+         if (document == nil && error != nil &&
+             !([error.domain isEqualToString:NSCocoaErrorDomain] && error.code == NSUserCancelledError)) {
+             [NSApp presentError:error];
+         }
      }];
 }
 
 #pragma mark - Open Default Todo.txt File Methods
 
+- (BOOL)shouldOpenDefaultTodoFileOnStartup {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return ([defaults boolForKey:@"openDefaultTodoFileOnStartup"] &&
+            [[defaults stringForKey:@"defaultTodoFilePath"] length] > 0);
+}
+
 -(void)openDefaultTodoFile {
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"openDefaultTodoFileOnStartup"]) {
+    if (![self shouldOpenDefaultTodoFileOnStartup]) {
         return;
     }
     [self openDocumentFromFilePath:[[NSUserDefaults standardUserDefaults]

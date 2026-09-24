@@ -53,15 +53,5 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-	<key>SU</key>
-	<string></string>
-	<key>SUAllowsAutomaticUpdates</key>
-	<false/>
-	<key>SUFeedURL</key>
-	<string>https://mjdescy.github.io/TodoTxtMac/todotxtmac-appcast.xml</string>
-	<key>SUPublicDSAKeyFile</key>
-	<string>dsa_pub.pem</string>
-	<key>SUShowReleaseNotes</key>
-	<true/>
 </dict>
 </plist>

@@ -74,8 +74,9 @@
  * @abstract This method calls the file open method, allows the user to select a file,
  * and stores the file URL to a specified user default key.
  * @discussion This is a helper method called by chooseArchiveFile: and chooseDefaultTodoFile:.
+ * @return YES if the user chose a file; NO if the user cancelled.
  */
-- (void)chooseFileForUserDefaultsKey:(NSString*)userDefaultsKey withPrompt:(NSString*)prompt;
+- (BOOL)chooseFileForUserDefaultsKey:(NSString*)userDefaultsKey withPrompt:(NSString*)prompt;
 
 #pragma mark - Behavior Change Methods
 
