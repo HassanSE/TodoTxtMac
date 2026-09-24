@@ -68,39 +68,53 @@
         BOOL selected = ([tableView.selectedRowIndexes containsIndex:row]);
         BOOL useHighlightColorsInTaskList = [[NSUserDefaults standardUserDefaults]
                                              boolForKey:@"useHighlightColorsInTaskList"];
-        NSColor *completedColor = [NSColor lightGrayColor];
+
+        // The default colors are too dark to read against a dark mode background, so pick
+        // brighter ones there. This method runs on every redraw, and AppKit redraws the table
+        // when the appearance changes, so switching modes updates the colors immediately.
+        BOOL darkMode = NO;
+        if (@available(macOS 10.14, *)) {
+            NSAppearanceName appearanceName = [tableView.effectiveAppearance
+                bestMatchFromAppearancesWithNames:@[NSAppearanceNameAqua, NSAppearanceNameDarkAqua]];
+            darkMode = [appearanceName isEqualToString:NSAppearanceNameDarkAqua];
+        }
+        NSColor *defaultDueTodayColor = darkMode ? [NSColor systemRedColor] : [NSColor redColor];
+        NSColor *defaultOverdueColor = darkMode ? [NSColor systemPurpleColor] : [NSColor purpleColor];
+        NSColor *defaultDetailColor = darkMode ? [NSColor secondaryLabelColor] : [NSColor darkGrayColor];
+
+        NSColor *completedColor = darkMode ? [NSColor tertiaryLabelColor] : [NSColor lightGrayColor];
         NSColor *dueTodayColor = ([[NSUserDefaults standardUserDefaults]
                                    boolForKey:@"useCustomColorForDueTodayTasks"]) ?
             [[NSUserDefaults standardUserDefaults] colorForKey:@"dueTodayColor"] :
-            [NSColor redColor];
+            defaultDueTodayColor;
         NSColor *overdueColor = ([[NSUserDefaults standardUserDefaults]
                                   boolForKey:@"useCustomColorForOverdueTasks"]) ?
             [[NSUserDefaults standardUserDefaults] colorForKey:@"overdueColor"] :
-            [NSColor purpleColor];
+            defaultOverdueColor;
         NSColor *projectColor = ([[NSUserDefaults standardUserDefaults]
                                   boolForKey:@"useCustomColorForProjects"]) ?
             [[NSUserDefaults standardUserDefaults] colorForKey:@"projectColor"] :
-            [NSColor darkGrayColor];
+            defaultDetailColor;
         NSColor *contextColor = ([[NSUserDefaults standardUserDefaults]
                                   boolForKey:@"useCustomColorForContexts"]) ?
             [[NSUserDefaults standardUserDefaults] colorForKey:@"contextColor"] :
-            [NSColor darkGrayColor];
+            defaultDetailColor;
         NSColor *tagColor = ([[NSUserDefaults standardUserDefaults]
                               boolForKey:@"useCustomColorForTags"]) ?
             [[NSUserDefaults standardUserDefaults] colorForKey:@"tagColor"] :
-            [NSColor darkGrayColor];
+            defaultDetailColor;
         NSColor *dueDateColor = ([[NSUserDefaults standardUserDefaults]
                                   boolForKey:@"useCustomColorForDueDates"]) ?
             [[NSUserDefaults standardUserDefaults] colorForKey:@"dueDateColor"] :
-            [NSColor darkGrayColor];
+            defaultDetailColor;
         NSColor *thresholdDateColor = ([[NSUserDefaults standardUserDefaults]
                                         boolForKey:@"useCustomColorForThresholdDates"]) ?
             [[NSUserDefaults standardUserDefaults] colorForKey:@"thresholdDateColor"] :
-            [NSColor darkGrayColor];
+            defaultDetailColor;
         NSColor *creationDateColor = ([[NSUserDefaults standardUserDefaults]
                                         boolForKey:@"useCustomColorForCreationDates"]) ?
             [[NSUserDefaults standardUserDefaults] colorForKey:@"creationDateColor"] :
-            [NSColor darkGrayColor];
+            defaultDetailColor;
 
         NSAttributedString *as = [task displayText:selected
                                               font:[cell font]

@@ -289,14 +289,14 @@ static NSString * const HiddenPattern = @"(?<=^|[ ])(h:1)(?=[ ]|$)";
     // of the priority substring to the default font.
     [as addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, as.length)];
     
-    // Apply strikethrough and light gray color to completed tasks when they are displayed
+    // Apply strikethrough and the completed color to completed tasks when they are displayed
     // in the tableView.
     if (self.isCompleted) {
         [as addAttribute:NSStrikethroughStyleAttributeName
                    value:(NSNumber*)kCFBooleanTrue
                    range:fullStringRange];
         [as addAttribute:NSForegroundColorAttributeName
-                   value:[NSColor lightGrayColor]
+                   value:completedColor
                    range:fullStringRange];
         return as;
     }
