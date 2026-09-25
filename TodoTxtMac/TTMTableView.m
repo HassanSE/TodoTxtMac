@@ -245,33 +245,18 @@
 
 #pragma mark - Row Background Methods
 
-// The row style comes from the taskListRowStyle user default (not yet shown in Settings):
-// 0 = none, 1 = alternating, 2 = separators, 3 = cards.
-// Backgrounds are drawn only behind tasks, never in the empty space below them, in the same
-// rounded shape as the inset selection highlight.
+// Alternating row backgrounds, drawn only behind tasks (never in the empty space below them)
+// and in the same rounded shape as the inset selection highlight.
 - (void)drawBackgroundInClipRect:(NSRect)clipRect {
     [super drawBackgroundInClipRect:clipRect];
-    NSInteger style = [[NSUserDefaults standardUserDefaults] integerForKey:@"taskListRowStyle"];
-    if (style == 0) {
-        return;
-    }
-    NSColor *alternateColor = [NSColor alternatingContentBackgroundColors].lastObject;
+    [[NSColor alternatingContentBackgroundColors].lastObject setFill];
     NSRange rows = [self rowsInRect:clipRect];
     for (NSInteger row = rows.location; row < (NSInteger)NSMaxRange(rows); row++) {
-        NSRect rowRect = [self rectOfRow:row];
-        NSRect pillRect = NSInsetRect(rowRect, 10.0, 1.0);
-        if (style == 1 && row % 2 == 1) {
-            [alternateColor setFill];
-            [[NSBezierPath bezierPathWithRoundedRect:pillRect xRadius:6.0 yRadius:6.0] fill];
-        } else if (style == 2 && row < self.numberOfRows - 1) {
-            [[NSColor separatorColor] setFill];
-            NSRectFill(NSMakeRect(NSMinX(pillRect) + 6.0, NSMaxY(rowRect) - 0.5,
-                                  NSWidth(pillRect) - 12.0, 1.0));
-        } else if (style == 3) {
-            [alternateColor setFill];
-            [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect(rowRect, 10.0, 2.0)
-                                             xRadius:7.0 yRadius:7.0] fill];
+        if (row % 2 == 0) {
+            continue;
         }
+        NSRect stripeRect = NSInsetRect([self rectOfRow:row], 10.0, 1.0);
+        [[NSBezierPath bezierPathWithRoundedRect:stripeRect xRadius:6.0 yRadius:6.0] fill];
     }
 }
 
