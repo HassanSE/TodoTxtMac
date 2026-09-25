@@ -12,6 +12,7 @@
                 <outlet property="appController" destination="cda-0y-TXV" id="g2i-w3-ifB"/>
                 <outlet property="statusBarFormat" destination="dps-Ov-KIp" id="9Vn-07-bZb"/>
                 <outlet property="statusBarTags" destination="AAU-j7-nuS" id="Rjg-Yg-D5e"/>
+                <outlet property="tabView" destination="y76-Kz-NYB" id="tTv-Pr-f5A"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="NDZ-dg-79d"/>
             </connections>
         </customObject>

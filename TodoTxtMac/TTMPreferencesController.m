@@ -61,8 +61,69 @@
 
 - (void)windowDidLoad {
     [super windowDidLoad];
-    
-    // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
+    [self setUpPaneToolbar];
+}
+
+#pragma mark - Settings Pane Methods
+
+// Shows the tab view's panes as toolbar icons, like the system's own Settings windows.
+- (void)setUpPaneToolbar {
+    self.tabView.tabViewType = NSNoTabsNoBorder;
+    NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"TTMPreferencesToolbar"];
+    toolbar.delegate = self;
+    toolbar.displayMode = NSToolbarDisplayModeIconAndLabel;
+    self.window.toolbar = toolbar;
+    self.window.toolbarStyle = NSWindowToolbarStylePreference;
+    [self showPaneWithIdentifier:self.tabView.tabViewItems.firstObject.identifier];
+}
+
+- (NSArray<NSToolbarItemIdentifier>*)paneIdentifiers {
+    NSMutableArray *identifiers = [NSMutableArray array];
+    for (NSTabViewItem *pane in self.tabView.tabViewItems) {
+        [identifiers addObject:pane.identifier];
+    }
+    return identifiers;
+}
+
+- (void)showPaneWithIdentifier:(NSToolbarItemIdentifier)identifier {
+    [self.tabView selectTabViewItemWithIdentifier:identifier];
+    self.window.toolbar.selectedItemIdentifier = identifier;
+    self.window.title = self.tabView.selectedTabViewItem.label;
+}
+
+- (IBAction)selectPane:(NSToolbarItem*)sender {
+    [self showPaneWithIdentifier:sender.itemIdentifier];
+}
+
+- (NSArray<NSToolbarItemIdentifier>*)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar {
+    return [self paneIdentifiers];
+}
+
+- (NSArray<NSToolbarItemIdentifier>*)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar {
+    return [self paneIdentifiers];
+}
+
+- (NSArray<NSToolbarItemIdentifier>*)toolbarSelectableItemIdentifiers:(NSToolbar*)toolbar {
+    return [self paneIdentifiers];
+}
+
+- (NSToolbarItem*)toolbar:(NSToolbar*)toolbar
+    itemForItemIdentifier:(NSToolbarItemIdentifier)identifier
+willBeInsertedIntoToolbar:(BOOL)flag {
+    // Pane identifiers are the tab view item identifiers set in TTMPreferences.xib.
+    NSDictionary *symbols = @{@"0": @"doc.text",
+                              @"6": @"gearshape",
+                              @"2": @"paintpalette",
+                              @"3": @"rectangle.bottomthird.inset.fill"};
+    NSTabViewItem *pane = [self.tabView tabViewItemAtIndex:
+                           [self.tabView indexOfTabViewItemWithIdentifier:identifier]];
+    NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
+    item.label = pane.label;
+    item.image = [NSImage imageWithSystemSymbolName:(symbols[identifier] ?: @"gearshape")
+                           accessibilityDescription:pane.label];
+    item.target = self;
+    item.action = @selector(selectPane:);
+    return item;
 }
 
 - (void)awakeFromNib {
@@ -97,7 +158,7 @@
     [panel setPrompt:prompt];
     [panel setAllowedFileTypes:@[@"txt", @"TXT", @"todo", @"TODO", @""]];
     
-    if ([panel runModal] != NSFileHandlingPanelOKButton) {
+    if ([panel runModal] != NSModalResponseOK) {
         return NO;
     }
     for (NSURL *fileURL in [panel URLs]) {

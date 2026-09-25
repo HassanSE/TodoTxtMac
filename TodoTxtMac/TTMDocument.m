@@ -54,6 +54,8 @@
 #import "RegExCategories.h"
 #import "TTMTasklistMetadata.h"
 #import "TTMDocumentStatusBarText.h"
+#import "TTMDocumentToolbar.h"
+#import "TTMNewTaskBar.h"
 
 @implementation TTMDocument
 
@@ -162,6 +164,7 @@ static NSString * const RelativeDueDatePattern = @"(?<=due:)\\S*";
     // Add any code here that needs to be executed once the windowController
     // has loaded the document's window.
     [self setStatusBarVisable:[[NSUserDefaults standardUserDefaults] boolForKey:@"showStatusBar"]];
+    [self setUpWindowChrome:aController.window];
 }
 
 - (id)windowWillReturnFieldEditor:(NSWindow *)sender toObject:(id)client {
@@ -171,7 +174,9 @@ static NSString * const RelativeDueDatePattern = @"(?<=due:)\\S*";
     [self.customFieldEditor setFieldEditor:YES];
     self.customFieldEditor.projectsArray = self.tasklistMetadata.projectsArray;
     self.customFieldEditor.contextsArray = self.tasklistMetadata.contextsArray;
-    self.customFieldEditor.drawsBackground = YES;
+    // Only tasks edited in place in the list need an opaque editor. The new task and search
+    // fields draw their own backgrounds (or sit on glass).
+    self.customFieldEditor.drawsBackground = (client == self.tableView);
     // A system color, so the editor follows light/dark mode.
     self.customFieldEditor.backgroundColor = [NSColor textBackgroundColor];
     return self.customFieldEditor;
@@ -1401,8 +1406,10 @@ static NSString * const RelativeDueDatePattern = @"(?<=due:)\\S*";
     // Note: Parent menu item tags rather than titles are queried so we don't need to worry about
     // internationalization of menu item title strings.
     
+    // Sort and filter items are matched by action rather than parent menu, so the copies in the
+    // toolbar's menus get checkmarks too.
     // Check active sort menu item.
-    if ([menuItem.parentItem tag] == SORTMENUTAG) {
+    if (menuItem.action == @selector(sortTaskListUsingTagforPreset:)) {
         if (menuItem.tag == self.activeSortType) {
             [menuItem setState:NSOnState];
         } else {
@@ -1410,7 +1417,7 @@ static NSString * const RelativeDueDatePattern = @"(?<=due:)\\S*";
         }
     }
     // Check active filter menu item.
-    if ([menuItem.parentItem tag] == FILTERMENUTAG) {
+    if (menuItem.action == @selector(filterTaskListUsingTagforPreset:)) {
         if (menuItem.tag == self.activeFilterPredicateNumber) {
             [menuItem setState:NSOnState];
         } else {
@@ -1558,6 +1565,63 @@ static NSString * const RelativeDueDatePattern = @"(?<=due:)\\S*";
                                      initWithTTMDocument:self
                                      format:format];
     self.statusBarText = [txt statusBarText];
+    [self updateWindowChrome];
+}
+
+#pragma mark - Window Chrome Methods
+
+- (void)setUpWindowChrome:(NSWindow*)window {
+    // Let the task list scroll under the toolbar, which is Liquid Glass on macOS 26.
+    window.styleMask |= NSWindowStyleMaskFullSizeContentView;
+    window.toolbarStyle = NSWindowToolbarStyleUnified;
+    self.toolbarController = [[TTMDocumentToolbar alloc] initWithDocument:self];
+    window.toolbar = self.toolbarController.toolbar;
+
+    self.tableView.style = NSTableViewStyleInset;
+
+    self.taskEntryBar = [[TTMNewTaskBar alloc] initWithDocument:self];
+    [self.taskEntryBar installInWindow:window];
+    [self updateWindowChrome];
+}
+
+- (void)updateWindowChrome {
+    NSWindow *window = self.windowControllers.firstObject.window;
+    if (!window) {
+        return;
+    }
+    [self.toolbarController update];
+    [self.taskEntryBar update];
+    window.subtitle = [self windowSubtitle];
+}
+
+// A short summary shown under the window title, e.g. "3 open · 1 overdue · 4 of 9 shown".
+- (NSString*)windowSubtitle {
+    NSUInteger openCount = 0;
+    NSUInteger dueTodayCount = 0;
+    NSUInteger overdueCount = 0;
+    for (TTMTask *task in self.taskList) {
+        if (task.isBlank || task.isCompleted) {
+            continue;
+        }
+        openCount++;
+        dueTodayCount += (task.dueState == DueToday) ? 1 : 0;
+        overdueCount += (task.dueState == Overdue) ? 1 : 0;
+    }
+
+    NSMutableArray *parts = [NSMutableArray arrayWithObject:
+                             [NSString stringWithFormat:@"%lu open", (unsigned long)openCount]];
+    if (dueTodayCount > 0) {
+        [parts addObject:[NSString stringWithFormat:@"%lu due today", (unsigned long)dueTodayCount]];
+    }
+    if (overdueCount > 0) {
+        [parts addObject:[NSString stringWithFormat:@"%lu overdue", (unsigned long)overdueCount]];
+    }
+    NSInteger shownCount = self.filteredTasklistMetadata.allTaskCount;
+    NSInteger allCount = self.tasklistMetadata.allTaskCount;
+    if (shownCount < allCount) {
+        [parts addObject:[NSString stringWithFormat:@"%ld of %ld shown", (long)shownCount, (long)allCount]];
+    }
+    return [parts componentsJoinedByString:@" · "];
 }
 
 - (BOOL)statusBarVisable {

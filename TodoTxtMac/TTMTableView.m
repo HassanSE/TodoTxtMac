@@ -243,6 +243,23 @@
     return [layoutManager defaultLineHeightForFont:font];
 }
 
+#pragma mark - Row Background Methods
+
+// Alternating row backgrounds, drawn only behind tasks (never in the empty space below them)
+// and in the same rounded shape as the inset selection highlight.
+- (void)drawBackgroundInClipRect:(NSRect)clipRect {
+    [super drawBackgroundInClipRect:clipRect];
+    [[NSColor alternatingContentBackgroundColors].lastObject setFill];
+    NSRange rows = [self rowsInRect:clipRect];
+    for (NSInteger row = rows.location; row < (NSInteger)NSMaxRange(rows); row++) {
+        if (row % 2 == 0) {
+            continue;
+        }
+        NSRect stripeRect = NSInsetRect([self rectOfRow:row], 10.0, 1.0);
+        [[NSBezierPath bezierPathWithRoundedRect:stripeRect xRadius:6.0 yRadius:6.0] fill];
+    }
+}
+
 #pragma mark - isEditing property
 
 - (bool)isEditing {

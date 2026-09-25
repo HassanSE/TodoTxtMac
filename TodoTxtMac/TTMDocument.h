@@ -46,7 +46,9 @@
 
 #import <Cocoa/Cocoa.h>
 @class TTMAppController;
+@class TTMDocumentToolbar;
 @class TTMFieldEditor;
+@class TTMNewTaskBar;
 @class TTMTask;
 @class TTMTasklistMetadata;
 @class TTMTableView;
@@ -94,6 +96,8 @@ typedef enum : NSUInteger {
 @property (nonatomic, retain) IBOutlet NSView *findReplaceView;
 @property (nonatomic, retain) IBOutlet NSTextField *findText;
 @property (nonatomic, retain) IBOutlet NSTextField *replaceText;
+@property (nonatomic, retain) TTMDocumentToolbar *toolbarController;
+@property (nonatomic, retain) TTMNewTaskBar *taskEntryBar;
 
 // User font preference
 @property (nonatomic) BOOL usingUserFont;
