@@ -64,6 +64,8 @@
 		00B4CBC718B43E8500313DAA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 00B4CBC518B43E8500313DAA /* InfoPlist.strings */; };
 		00B4CBC918B43E8500313DAA /* TTMTask_ReplaceText_UnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00B4CBC818B43E8500313DAA /* TTMTask_ReplaceText_UnitTests.m */; };
 		00B8C82518E48FFF008D9E48 /* TTMFieldEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 00B8C82418E48FFF008D9E48 /* TTMFieldEditor.m */; };
+		7A1C00032E90000100A1B001 /* TTMDocumentToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A1C00022E90000100A1B001 /* TTMDocumentToolbar.m */; };
+		7A1C00062E90000100A1B001 /* TTMNewTaskBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A1C00052E90000100A1B001 /* TTMNewTaskBar.m */; };
 		00D102B61991ABBE00D30237 /* TTMTasklistMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 00D102B51991ABBE00D30237 /* TTMTasklistMetadata.m */; };
 		00D531271CACA285007EF487 /* TTMTask_IsHidden_UnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00D531261CACA285007EF487 /* TTMTask_IsHidden_UnitTests.m */; };
 		00D5312A1CACC3C7007EF487 /* TTMPredicateEditorHiddenRowTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = 00D531291CACC3C7007EF487 /* TTMPredicateEditorHiddenRowTemplate.m */; };
@@ -170,6 +172,10 @@
 		00B4CBC818B43E8500313DAA /* TTMTask_ReplaceText_UnitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTMTask_ReplaceText_UnitTests.m; sourceTree = "<group>"; };
 		00B8C82318E48FFF008D9E48 /* TTMFieldEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTMFieldEditor.h; sourceTree = "<group>"; };
 		00B8C82418E48FFF008D9E48 /* TTMFieldEditor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTMFieldEditor.m; sourceTree = "<group>"; };
+		7A1C00012E90000100A1B001 /* TTMDocumentToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTMDocumentToolbar.h; sourceTree = "<group>"; };
+		7A1C00022E90000100A1B001 /* TTMDocumentToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTMDocumentToolbar.m; sourceTree = "<group>"; };
+		7A1C00042E90000100A1B001 /* TTMNewTaskBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTMNewTaskBar.h; sourceTree = "<group>"; };
+		7A1C00052E90000100A1B001 /* TTMNewTaskBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTMNewTaskBar.m; sourceTree = "<group>"; };
 		00D102B41991ABBE00D30237 /* TTMTasklistMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTMTasklistMetadata.h; sourceTree = "<group>"; };
 		00D102B51991ABBE00D30237 /* TTMTasklistMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTMTasklistMetadata.m; sourceTree = "<group>"; };
 		00D531261CACA285007EF487 /* TTMTask_IsHidden_UnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTMTask_IsHidden_UnitTests.m; sourceTree = "<group>"; };
@@ -421,6 +427,10 @@
 				00F3961118C6AC010002EA3F /* TTMTableView.m */,
 				00B8C82318E48FFF008D9E48 /* TTMFieldEditor.h */,
 				00B8C82418E48FFF008D9E48 /* TTMFieldEditor.m */,
+				7A1C00012E90000100A1B001 /* TTMDocumentToolbar.h */,
+				7A1C00022E90000100A1B001 /* TTMDocumentToolbar.m */,
+				7A1C00042E90000100A1B001 /* TTMNewTaskBar.h */,
+				7A1C00052E90000100A1B001 /* TTMNewTaskBar.m */,
 				00FB47841A733E6100F8D2B3 /* TTMDocumentStatusBarText.h */,
 				00FB47851A733E6100F8D2B3 /* TTMDocumentStatusBarText.m */,
 			);
@@ -575,6 +585,8 @@
 				00FB47861A733E6100F8D2B3 /* TTMDocumentStatusBarText.m in Sources */,
 				00D5312A1CACC3C7007EF487 /* TTMPredicateEditorHiddenRowTemplate.m in Sources */,
 				00B8C82518E48FFF008D9E48 /* TTMFieldEditor.m in Sources */,
+				7A1C00032E90000100A1B001 /* TTMDocumentToolbar.m in Sources */,
+				7A1C00062E90000100A1B001 /* TTMNewTaskBar.m in Sources */,
 				00EAAB9D18E1CF92009CBE8C /* TTMPredicateEditorCompletedRowTemplate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -710,7 +722,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				ONLY_ACTIVE_ARCH = YES;
 				"OTHER_LDFLAGS[arch=*]" = "-Wl,-rpath,@loader_path/../Frameworks";
 				SDKROOT = macosx;
@@ -748,7 +760,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				ONLY_ACTIVE_ARCH = YES;
 				"OTHER_LDFLAGS[arch=*]" = "-Wl,-rpath,@loader_path/../Frameworks";
 				SDKROOT = macosx;

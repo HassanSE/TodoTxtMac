@@ -47,8 +47,9 @@
 #import <Cocoa/Cocoa.h>
 @class TTMAppController;
 
-@interface TTMPreferencesController : NSWindowController <NSTextFieldDelegate>
+@interface TTMPreferencesController : NSWindowController <NSTextFieldDelegate, NSToolbarDelegate>
 
+@property (nonatomic, weak) IBOutlet NSTabView *tabView;
 @property (nonatomic, retain) IBOutlet TTMAppController *appController;
 @property (nonatomic, retain) NSFont *selectedFont;
 @property (nonatomic, retain) IBOutlet NSTextField *statusBarFormat;
